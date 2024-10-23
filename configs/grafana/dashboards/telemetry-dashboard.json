@@ -150,6 +150,47 @@
       "type": "timeseries"
     },
     {
+      "type": "labsoft-co3-panel",
+      "name": "Co3",
+      "id": "labsoft-panel",
+      "title": "CO3",
+      "gridPos": {
+        "h": 7,
+        "w": 13,
+        "x": 0,
+        "y": 1
+      },
+      "info": {
+        "keywords": [
+          "panel",
+          "network"
+        ],
+        "description": "Visualisation Co3",
+        "logos": {
+          "small": "img/logo.svg",
+          "large": "img/logo.svg"
+        },
+        "version": "%VERSION%",
+        "updated": "%TODAY%"
+      },
+      "options":  [
+          {
+            "value": "bottom",
+            "label": "Bottom",
+            "ariaLabel": "ariaLabels.legendPlacementBottom"
+          },
+          {
+            "value": "right",
+            "label": "Right",
+            "ariaLabel": "ariaLabels.legendPlacementRight"
+          }
+        ],
+      "dependencies": {
+        "grafanaDependency": ">=10.3.3",
+        "plugins": []
+      }
+    },    
+    {
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"

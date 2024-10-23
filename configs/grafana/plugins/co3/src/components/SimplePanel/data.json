@@ -1,0 +1,105 @@
+
+{
+    "nodes": [
+      {
+        "id": 1,
+        "port": "spine-1",
+        "type": "switch"
+      },
+      {
+        "id": 2,
+        "port": "spine-2",
+        "type": "switch"
+
+      },
+      {
+        "id": 3,
+        "port": "leaf-1",
+        "type": "switch"
+
+      },
+      {
+        "id": 4,
+        "port": "leaf-2",
+        "type": "switch"
+
+      },
+      {
+        "id": 5,
+        "port": "leaf-3",
+        "type": "switch"
+
+      },
+      {
+        "id": 6,
+        "port": "client-1",
+        "type": "host"
+
+      },
+      {
+        "id": 7,
+        "port": "client-2",
+        "type": "host"
+
+      },
+      {
+        "id": 8,
+        "port": "client-3",
+        "type": "host"
+
+      }
+    ],
+    "links": [
+      {
+        "source": 1,
+        "target": 3,
+         "bandwidth": "100 Mbps"
+      },
+      {
+        "source": 3,
+        "target": 1,
+         "bandwidth": "200 Mbps"
+      },
+      {
+        "source": 2,
+        "target": 3,
+         "bandwidth": "100 Mbps"
+      },
+      {
+        "source": 1,
+        "target": 4,
+         "bandwidth": "100 Mbps"
+      },
+      {
+        "source": 2,
+        "target": 4,
+         "bandwidth": "100 Mbps"
+      },
+    
+      {
+        "source": 1,
+        "target": 5 
+        
+      },
+      {
+        "source": 2,
+        "target": 5
+      
+      },
+      {
+        "source":3 ,
+        "target": 6,
+         "bandwidth": "100 Mbps"
+      },
+       {
+        "source": 4,
+        "target": 7,
+         "bandwidth": "100 Mbps"
+      },
+      {
+        "source": 5,
+        "target": 8,
+         "bandwidth": "100 Mbps"
+      }
+    ]
+  }
