@@ -150,44 +150,22 @@
       "type": "timeseries"
     },
     {
-      "type": "labsoft-panel",
-      "name": "Co3",
-      "id": "labsoft-panel",
-      "title": "Co3 Panel",
+      "type": "labsoft-panel", 
+      "title": "Network Visualization",
+      "id": 23,
       "gridPos": {
-        "h": 7,
-        "w": 13,
+        "h": 8,
+        "w": 12,
         "x": 0,
-        "y": 2
+        "y": 0
       },
-      "info": {
-        "keywords": [
-          "panel",
-          "network"
-        ],
-        "description": "Visualisation Co3",
-        "logos": {
-          "small": "img/logo.svg",
-          "large": "img/logo.svg"
-        },
-        "version": "%VERSION%",
-        "updated": "%TODAY%"
-      },
-      "options":  [
-          {
-            "value": "bottom",
-            "label": "Bottom",
-            "ariaLabel": "ariaLabels.legendPlacementBottom"
-          },
-          {
-            "value": "right",
-            "label": "Right",
-            "ariaLabel": "ariaLabels.legendPlacementRight"
-          }
-        ],
-      "dependencies": {
+      "datasource": null,
+      "options": {
+        "networkData": "Some network data to visualize",
+        "dependencies": {
         "grafanaDependency": ">=10.3.3",
         "plugins": []
+      }
       }
     },    
     {
