@@ -4,6 +4,10 @@
     "target": "es5",
     "esModuleInterop": true
   },
+  // "exclude": [
+  //   "node_modules",
+  //   "frontend" // Or wherever frontend code resides
+  // ],
   "transpileOnly": true,
   "transpiler": "ts-node/transpilers/swc-experimental"
 }

@@ -149,6 +149,10 @@ const config = async (env): Promise<Configuration> => {
             filename: Boolean(env.production) ? '[hash][ext]' : '[file]',
           },
         },
+        {
+          test: /\.yml$/,
+          use: 'yaml-loader',
+        },
       ],
     },
 

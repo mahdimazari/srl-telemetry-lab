@@ -1,0 +1,158 @@
+{
+  "containers": [
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "client1",
+      "container_id": "9d1cce09d7ca",
+      "image": "ghcr.io/srl-labs/network-multitool",
+      "kind": "linux",
+      "group": "server",
+      "state": "running",
+      "ipv4_address": "172.80.80.31/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "client2",
+      "container_id": "2550629c3358",
+      "image": "ghcr.io/srl-labs/network-multitool",
+      "kind": "linux",
+      "group": "server",
+      "state": "running",
+      "ipv4_address": "172.80.80.32/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "client3",
+      "container_id": "29a341c06798",
+      "image": "ghcr.io/srl-labs/network-multitool",
+      "kind": "linux",
+      "group": "server",
+      "state": "running",
+      "ipv4_address": "172.80.80.33/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "gnmic",
+      "container_id": "b6b370e4e202",
+      "image": "ghcr.io/openconfig/gnmic:0.38.1",
+      "kind": "linux",
+      "group": "10",
+      "state": "running",
+      "ipv4_address": "172.80.80.41/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "grafana",
+      "container_id": "4bb8dc7516d9",
+      "image": "grafana/grafana:10.2.1",
+      "kind": "linux",
+      "group": "10",
+      "state": "running",
+      "ipv4_address": "172.80.80.43/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "leaf1",
+      "container_id": "9ab65198888b",
+      "image": "ghcr.io/nokia/srlinux:24.7.2",
+      "kind": "nokia_srlinux",
+      "group": "leaf",
+      "state": "running",
+      "ipv4_address": "172.80.80.11/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "leaf2",
+      "container_id": "54cc3e047eb9",
+      "image": "ghcr.io/nokia/srlinux:24.7.2",
+      "kind": "nokia_srlinux",
+      "group": "leaf",
+      "state": "running",
+      "ipv4_address": "172.80.80.12/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "leaf3",
+      "container_id": "21c5ea8b0eba",
+      "image": "ghcr.io/nokia/srlinux:24.7.2",
+      "kind": "nokia_srlinux",
+      "group": "leaf",
+      "state": "running",
+      "ipv4_address": "172.80.80.13/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "loki",
+      "container_id": "65312eb833c8",
+      "image": "grafana/loki:2.9.2",
+      "kind": "linux",
+      "state": "running",
+      "ipv4_address": "172.80.80.46/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "prometheus",
+      "container_id": "6c6f2388abcb",
+      "image": "quay.io/prometheus/prometheus:v2.47.2",
+      "kind": "linux",
+      "group": "10",
+      "state": "running",
+      "ipv4_address": "172.80.80.42/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "promtail",
+      "container_id": "e76b05b4bf44",
+      "image": "grafana/promtail:2.9.2",
+      "kind": "linux",
+      "state": "running",
+      "ipv4_address": "172.80.80.45/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "spine1",
+      "container_id": "99f6e402fdcc",
+      "image": "ghcr.io/nokia/srlinux:24.7.2",
+      "kind": "nokia_srlinux",
+      "group": "spine",
+      "state": "running",
+      "ipv4_address": "172.80.80.21/24",
+      "ipv6_address": "N/A"
+    },
+    {
+      "lab_name": "st",
+      "labPath": "st.clab.yml",
+      "name": "spine2",
+      "container_id": "2b8efd1b5551",
+      "image": "ghcr.io/nokia/srlinux:24.7.2",
+      "kind": "nokia_srlinux",
+      "group": "spine",
+      "state": "running",
+      "ipv4_address": "172.80.80.22/24",
+      "ipv6_address": "N/A"
+    }
+  ]
+}

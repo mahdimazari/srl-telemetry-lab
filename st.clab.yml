@@ -105,6 +105,7 @@ topology:
         - configs/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
         - configs/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
         - configs/grafana/dashboards:/var/lib/grafana/dashboards
+        - configs/grafana/plugins/labsoft-panel:/var/lib/grafana/plugins/labsoft-panel
       ports:
         - 3000:3000
       env:

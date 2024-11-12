@@ -1,1 +1,1 @@
-export { SimplePanel } from './SimplePanel/SimplePanel';
+export { SimplePanel } from './simplePanel/simplePanel';

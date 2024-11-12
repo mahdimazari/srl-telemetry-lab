@@ -152,11 +152,49 @@
     {
       "type": "labsoft-panel",
       "name": "Co3",
-      "id": "labsoft-panel",
+      "id": 23,
+      "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "gnmic_srl_if_traffic_rate_out_bps",
+          "interval": "",
+          "legendFormat": "{{source}}:{{interface_name}}:out",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "expr": "gnmic_srl_if_traffic_rate_in_bps",
+          "interval": "",
+          "legendFormat": "{{source}}:{{interface_name}}:in",
+          "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          },
+          "editorMode": "code",
+          "expr": "gnmic_srl_if_oper_state_oper_state",
+          "hide": false,
+          "legendFormat": "oper-state:{{source}}:{{interface_name}}",
+          "range": true,
+          "refId": "C"
+        }
+      ],
       "title": "Co3 Panel",
       "gridPos": {
-        "h": 7,
-        "w": 13,
+        "h": 13,
+        "w": 12,
         "x": 0,
         "y": 0     
        },
@@ -8140,7 +8178,7 @@
       "type": "timeseries"
     }
   ],
-  "refresh": "5s",
+  "refresh": "10s",
   "schemaVersion": 38,
   "style": "dark",
   "tags": [],

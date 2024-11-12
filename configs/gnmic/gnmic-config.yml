@@ -22,70 +22,70 @@ subscriptions:
       - /interface[name=ethernet-1/*]/oper-state
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_net_instance:
     paths:
       - /network-instance[name=*]/oper-state
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_if_stats:
     paths:
       - /interface[name=ethernet-1/*]/statistics
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_if_traffic_rate:
     paths:
       - /interface[name=ethernet-1/*]/traffic-rate
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_cpu:
     paths:
       - /platform/control[slot=*]/cpu[index=all]/total
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_mem:
     paths:
       - /platform/control[slot=*]/memory
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_bgp_stats:
     paths:
       - /network-instance[name=*]/protocols/bgp/statistics
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_ipv4_routes:
     paths:
       - /network-instance[name=*]/route-table/ipv4-unicast/statistics/
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_ipv6_routes:
     paths:
       - /network-instance[name=*]/route-table/ipv6-unicast/statistics/
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
   srl_apps:
     paths:
       - /system/app-management/application[name=*]
     mode: stream
     stream-mode: sample
-    sample-interval: 5s
+    sample-interval: 10s
 
 outputs:
   prom:

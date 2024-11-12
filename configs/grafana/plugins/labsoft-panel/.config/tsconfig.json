@@ -22,5 +22,9 @@
     "transpileOnly": true
   },
   "include": ["../src", "./types"],
+  "exclude": [
+    "node_modules",
+    "frontend" // Or wherever frontend code resides
+  ],
   "extends": "@grafana/tsconfig"
 }
