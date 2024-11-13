@@ -115,6 +115,7 @@ topology:
         GF_ORG_NAME: "Main Org"
         GF_AUTH_ANONYMOUS_ENABLED: "true"
         GF_AUTH_ANONYMOUS: "true"
+        GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: "labsoft-panel"
       group: "10"
 
     ### LOGGING STACK ###
