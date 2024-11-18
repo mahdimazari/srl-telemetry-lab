@@ -121,7 +121,7 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
             .force("link", d3.forceLink(links).id((d: any) => d.name).distance(120))
             .force("charge", d3.forceManyBody().strength(-400))
             .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("x", d3.forceX().strength(0.01))
+            // .force("x", d3.forceX().strength(1))
             .force("y", d3.forceY((d: any) => {
                 return groupYPositions[d.type] || height / 2; // Apply custom Y position by group
             }).strength(1));
@@ -156,43 +156,42 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
               .style("font-size", "8px")
               .style("fill", "#fff");
 
-              // Create an arrow marker for the middle of each bidirectional link
-              svg.append("defs")
-              .append("marker")
-              .attr("id", "mid-arrowhead")
-              .attr("viewBox", "-0 -5 10 10")
-              .attr("refX", 5)
-              .attr("refY", 0)
-              .attr("orient", "auto")
-              .attr("markerWidth", 6)
-              .attr("markerHeight", 6)
-              .attr("xoverflow", "visible")
-              .append("svg:path")
-              .attr("d", "M 0,-5 L 10 ,0 L 0,5")
-              .attr("fill", "#00f")
-              .style("stroke", "none");
+              
 
+        // // Create node circles
+            // const node = svg.selectAll(".node")
+            //     .data(nodes)
+            //     .enter()
+            //     .append("circle")
+            //     .attr("class", "node")
+            //     .attr("r", 20)
+            //     .style("fill", "#1f77b4")
+            //     .style("stroke", "#fff")
+            //     .style("stroke-width", "1.5px");
+    console.log('version 2.8');
 
-
-        // Calculate midpoint arrowhead for bidirectional links
-        // const midpointArrow = svg.selectAll(".mid-arrow")
-        // .data(links)
-        // .enter()
-        // .append("line")
-        // .attr("class", "mid-arrow")
-        // .attr("marker-mid", "url(#mid-arrowhead)")
-        // .style("stroke", "none") // Only shows the marker in the middle, no visible line
-
-        // Create node circles
-            const node = svg.selectAll(".node")
-                .data(nodes)
-                .enter()
-                .append("circle")
-                .attr("class", "node")
-                .attr("r", 20)
-                .style("fill", "#1f77b4")
-                .style("stroke", "#fff")
-                .style("stroke-width", "1.5px");
+    const node = svg.selectAll(".node")
+    .data(nodes)
+    .enter()
+    .append("image")
+    .attr("class", "node")
+    .attr("xlink:href", (d) => {
+        // Return the image URL based on the node type
+        if (d.type === "spine" ||d.type === 'leaf') {
+         
+            return switchImg; // Replace with your actual image path
+        // } else if (d.type === "leaf") {
+        //     return "path/to/leaf-image.png"; // Replace with your actual image path
+        // } else if (d.type === "client") {
+        //     return "path/to/client-image.png"; // Replace with your actual image path
+        } else {
+            return mac; // Fallback for other node types
+        }
+    })
+    .attr("width", 40) // Adjust the width of the images
+    .attr("height", 40); // Adjust the height of the images
+    // .attr("x", -20) // Offset the image to center it on the node position
+    // .attr("y", -20); // Offset the image to center it on the node position
   
      
 
@@ -202,22 +201,22 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
             // .attr("class", "node");   
 
             // node.each(function(d) {
-            //   if (d.type === "switch" ) {
-                  
+            //   console.log('port', d.name, d.type);
+            // if (d.type === "spine") {
             // d3.select(this)
             // .append("image")
-            // .attr("href", switchImg) // Use the imported image
+            // .attr("href", switchImg) 
             // .attr("width", 50)
             // .attr("height", 50)
-            // .attr("x", -25)  // Center the image horizontally
+            // .attr("x", -25)  
             // .attr("y", -25);          
             //   } else {
             // d3.select(this)
             // .append("image")
-            // .attr("href", mac) // Use the imported image
+            // .attr("href", mac) 
             // .attr("width", 50)
             // .attr("height", 50)
-            // .attr("x", -25)  // Center the image horizontally
+            // .attr("x", -25)  
             // .attr("y", -25);
             //    }
             // });
@@ -299,9 +298,8 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
                 .text(d => d.targetPort);
 
         });
-        console.log('data 12');
         
-    }, [ dimensions]);
+    }, [dimensions]);
 
     useEffect(() => {
       if (!svgRef.current) return;

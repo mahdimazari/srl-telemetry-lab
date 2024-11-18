@@ -105,7 +105,7 @@ topology:
         - configs/grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yaml:ro
         - configs/grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/dashboards.yaml:ro
         - configs/grafana/dashboards:/var/lib/grafana/dashboards
-        - configs/grafana/plugins/labsoft-panel/dist:/var/lib/grafana/plugins/labsoft-panel
+        - configs/grafana/plugins/labsoft-panel:/var/lib/grafana/plugins/labsoft-panel:rw
       ports:
         - 3000:3000
       env:
@@ -116,7 +116,7 @@ topology:
         GF_AUTH_ANONYMOUS_ENABLED: "true"
         GF_AUTH_ANONYMOUS: "true"
         GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: "labsoft-panel"
-      group: "10"
+      group: "10" 
 
     ### LOGGING STACK ###
     promtail:
