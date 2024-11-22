@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { PanelProps } from '@grafana/data';
+import { PanelProps} from '@grafana/data';
 import { SimpleOptions } from 'types';
 // // import data from './data.json';
 import * as d3 from 'd3';
@@ -29,38 +29,65 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
     targetPort: link.endpoints[1].split(":")[1]
   }));
 
-  // useEffect(() => {
-    // Fetch data and update transformedData state
 
     const fetchAndEnrichData = async () => {
     fetchPrometheusData("gnmic_srl_if_traffic_rate_out_bps").then(data => {
-      const transformed = transformPrometheusData(data);
-    console.log('transformed OUT ', transformed, links);
+      const transformedIn = transformPrometheusData(data);
+    console.log('transformed OUT ', transformedIn, links);
 
    setTransformedLink(links.map(link => {
-    // console.log('test', transformed, links )
+    // console.log('testOut', transformedIn, links)
     // Find the matching entry in the database where both source and interface match
-    const match = transformed.links.find(
+    const match = transformedIn.links.find(
       entry=>  entry.source === link.source && entry.interface === link.sourcePort)
     // If a match is found, add the value to the link object
     return match
-      ? { ...link, value: match.value }
+      ? { ...link, valueOut: match.value }
       : link; 
     }));
   });
 
+
+  fetchPrometheusData("gnmic_srl_if_traffic_rate_in_bps").then(data => {
+    const transformedOut = transformPrometheusData(data);
+    console.log('transformed IN', transformedOut, links);
+    setTransformedLink(links.map(link => {
+    //   console.log('test', transformed, link )
+      // Find the matching entry in the database where both source and interface match
+      const match = transformedOut.links.find(
+        entry=>  entry.source === link.source && entry.interface === link.sourcePort)
+      // // If a match is found, add the value to the link object
+      return match
+        ? { ...link, valueIn: match.value }
+        : link; 
+      }));
+    });
+
+
+}
+
+function formatBits(bits) {
+ 
+  const kb = bits / 1000;       
+  const mb = kb / 1000;        
+
+  if (mb >= 1) {
+      return `${mb.toFixed(1)} Mb/s`;
+  } else {
+      return `${kb.toFixed(1)} kb/s`; 
+  }
 }
 
 
 
-   // Use useEffect to set an interval for updating the bandwidth
+   
    useEffect(() => {
     const interval = setInterval(fetchAndEnrichData, 10000); // Update bandwidth every 3 seconds
 
     return () => clearInterval(interval); // Cleanup the interval on unmount
   }, []);
  
- // Observe size of the container element
+ 
   useEffect(() => {
 
     const observer = new ResizeObserver(entries => {
@@ -115,7 +142,7 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
     };
   
     // Assign positions to nodes based on type and order
-    const nodeSpacing = 150; // Space between nodes in the same row
+    const nodeSpacing = 200; // Space between nodes in the same row
     const structuredNodes = nodes.map((node, index) => {
       const typeNodes = nodes.filter((n) => n.type === node.type);
       const typeIndex = typeNodes.indexOf(node);
@@ -138,22 +165,23 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
     const structuredLinks = links.map((link) => {
       const sourceNode = structuredNodes.find((n) => n.name === link.source);
       const targetNode = structuredNodes.find((n) => n.name === link.target);
-    
         
-      const value = transformedLink.find((n) => n.target === link.target || n.source === link.source);
+      const valueOut = transformedLink.find((n) => n.target === link.target || n.source === link.source);
+      const valueIn = transformedLink.find((n) => n.target === link.target || n.source === link.source);
       // console.log('value,', value?.value);
       
         return {
           ...link,
           source: sourceNode,
           target: targetNode,
-          value:  value?.value || '0.0'
+          valueOut:  valueOut?.valueOut || '0.0',
+          valueIn: valueIn?.valueIn ||'0.0'
         };
       
     
     });
 
-    // console.log('links', links, structuredLinks, transformedLink);
+    console.log('links', links, structuredLinks, transformedLink);
 
   
     // Draw links
@@ -178,9 +206,9 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
       .attr("xlink:href", (d) =>
         d.type === "spine" || d.type === "leaf" ? switchImg : mac
       )
-      .attr("width", 50)
-      .attr("height", 50)
-      .attr("x", (d) => d.x - 20) // Offset to center image
+      .attr("width", 60)
+      .attr("height", 60)
+      .attr("x", (d) => d.x - 25) 
       .attr("y", (d) => d.y - 20);
   
     // Add node labels
@@ -189,8 +217,8 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
       .enter()
       .append("text")
       .attr("class", "text")
-      .attr("x", (d) => d.x - 20)
-      .attr("y", (d) => d.y + 30)
+      .attr("x", (d) => d.x + 35)
+      .attr("y", (d) => d.y + 10)
       .text((d) => d.name)
       .style("font-size", "12px")
       .style("fill", "#ffff");
@@ -202,8 +230,17 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
       .enter()
       .append('circle')
       .attr('class', 'port-circle')
-      .attr('r', 5)
-      .style('fill', '#ff5722');
+      .attr('r', 7);
+      // .style('fill', '#ff5722');
+
+      const portCirclesIn = svg
+      .selectAll('.port-circle-in')
+      .data(structuredLinks)
+      .enter()
+      .append('circle')
+      .attr('class', 'port-circle')
+      .attr('r', 7);
+      // .style('fill', '#ff5722');
 
     const portLabels = svg
       .selectAll('.port-label')
@@ -214,61 +251,94 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
       .style('font-size', '8px')
       .style('fill', '#fff');
 
+      const portLabelsIn = svg
+      .selectAll('.port-label-in')
+      .data(structuredLinks)
+      .enter()
+      .append('text')
+      .attr('class', 'port-label')
+      .style('font-size', '8px')
+      .style('fill', '#fff');
+
+
 
 
   
     // Add link bandwidth labels
-    svg.selectAll(".link-text")
+    svg.selectAll(".linkOut-text")
     .data(structuredLinks)
     .join(
       enter => enter.append("text")
-                    .attr("class", "link-text")
-                    .style("font-size", "10px")
+                    .attr("class", "linkOut-text")
+                    .style("font-size", "8px")
                     .style("fill", "#fff"),
       update => update,
       exit => exit.remove()
     )
-    .text(d => d.value)
-    .attr("x", d => d.source.x + (d.target.x - d.source.x) * 0.4 - 20)
-    .attr("y", d => d.source.y + (d.target.y - d.source.y) * 0.4);
+    .text(d => formatBits(d.valueOut))
+    .attr("x", d => d.source.x + (d.target.x - d.source.x) * 0.25 - 10)
+    .attr("y", d => d.source.y + (d.target.y - d.source.y) * 0.25);
+
+
+     // Add link bandwidth labels
+     svg.selectAll(".linkIn-text")
+     .data(structuredLinks)
+     .join(
+       enter => enter.append("text")
+                     .attr("class", "linkIn-text")
+                     .style("font-size", "8px")
+                     .style("fill", "#fff"),
+       update => update,
+       exit => exit.remove()
+     )
+     .text(d => formatBits(d.valueIn))
+     .attr("x", d => d.source.x + (d.target.x - d.source.x) * 0.7 - 10)
+     .attr("y", d => d.source.y + (d.target.y - d.source.y) * 0.7);
 
 
 
       // simulation.on("tick", () => {
 
-      portCircles
+      portCirclesIn
       .filter(d => d.source)
       .attr("cx", d => {
-        return d.source.x + (d.target.x - d.source.x) * 0.1;
+        return d.source.x + (d.target.x - d.source.x) * 0.12;
       })
       .attr("cy", d => {
-        return d.source.y + (d.target.y - d.source.y) * 0.1;
+        return d.source.y + (d.target.y - d.source.y) * 0.12;
       })
-      .style("fill", "#ff5722"); // Source port circle color
+      .style("fill", "#4caf50"); // Source port circle color
 
-    // Position target port circle at 80% along the link (target port)
+
       portCircles
-      .filter(d => d.target) // Ensure we are positioning the target port circle
+      .filter(d => d.target) 
       .attr("cx", d => {
-        // Calculate position at 80% (target port)
+      
         return d.source.x + (d.target.x - d.source.x) * 0.9;
       })
       .attr("cy", d => {
-        // Calculate position at 80% (target port)
         return d.source.y + (d.target.y - d.source.y) * 0.9;
       })
-      .style("fill", "#4caf50"); // Target port circle color
+      .style("fill", "#4caf50"); 
+      portLabelsIn
+      .filter((d, i) => d.source)
+      .attr("x", d => {
+        return d.source.x + (d.target.x - d.source.x) * 0.12 - 5 ;
+      })
+      .attr("y", d => {
+        return d.source.y + (d.target.y - d.source.y) * 0.12 + 5 ;
+      })
+      .text(d => d.sourcePort.includes('-') ? d.sourcePort.split('-')[1] : d.sourcePort);
 
       portLabels
         .filter((d, i) => d.target)
         .attr("x", d => {
-          return d.source.x + (d.target.x - d.source.x) * 0.9;
+          return d.source.x + (d.target.x - d.source.x) * 0.9 - 5;
         })
         .attr("y", d => {
-          return d.source.y + (d.target.y - d.source.y) * 0.9 - 10;
+          return d.source.y + (d.target.y - d.source.y) * 0.9 + 5;
         })
         .text(d => d.targetPort.includes('-') ? d.targetPort.split('-')[1] : d.targetPort);
-      
 
 
   }, [dimensions, transformedLink]);
@@ -280,6 +350,5 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
     <div ref={containerRef} style={{ width: '100%', height: '100%' }}> 
       <svg ref={svgRef} id="co3"> </svg>
     </div>
-   
   );
 };
