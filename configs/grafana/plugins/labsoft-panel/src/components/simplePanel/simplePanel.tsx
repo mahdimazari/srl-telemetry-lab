@@ -29,52 +29,111 @@ export const SimplePanel: React.FC<Props> = ({ options, width, height }) => {
     targetPort: link.endpoints[1].split(":")[1]
   }));
 
+  // const fetchAndEnrichData = async () => {
+  //   fetchPrometheusData("gnmic_srl_if_traffic_rate_out_bps").then(data => {
+  //     const transformedIn = transformPrometheusData(data);
+  //   console.log('transformed OUT ', transformedIn, links);
 
-    const fetchAndEnrichData = async () => {
-    fetchPrometheusData("gnmic_srl_if_traffic_rate_out_bps").then(data => {
-      const transformedIn = transformPrometheusData(data);
-    console.log('transformed OUT ', transformedIn, links);
-
-   setTransformedLink(links.map(link => {
-    // console.log('testOut', transformedIn, links)
-    // Find the matching entry in the database where both source and interface match
-    const match = transformedIn.links.find(
-      entry=>  entry.source === link.source && entry.interface === link.sourcePort)
-    // If a match is found, add the value to the link object
-    return match
-      ? { ...link, valueOut: match.value }
-      : link; 
-    }));
-  });
-
-
-  fetchPrometheusData("gnmic_srl_if_traffic_rate_in_bps").then(data => {
-    const transformedOut = transformPrometheusData(data);
-    console.log('transformed IN', transformedOut, links);
-    setTransformedLink(links.map(link => {
-    //   console.log('test', transformed, link )
-      // Find the matching entry in the database where both source and interface match
-      const match = transformedOut.links.find(
-        entry=>  entry.source === link.source && entry.interface === link.sourcePort)
-      // // If a match is found, add the value to the link object
-      return match
-        ? { ...link, valueIn: match.value }
-        : link; 
-      }));
-    });
+  //  setTransformedLink(links.map(link => {
+  //   // console.log('testOut', transformedIn, links)
+  //   // Find the matching entry in the database where both source and interface match
+  //   const match = transformedIn.links.find(
+  //     entry=>  entry.source === link.source && entry.interface === link.sourcePort)
+  //     console.log(match);
+  //   // If a match is found, add the value to the link object
+  //   return match
+  //     ? { ...link, valueOut: match.value }
+  //     : link; 
+  //   }));
+  // });
 
 
-}
+  // fetchPrometheusData("gnmic_srl_if_traffic_rate_in_bps").then(data => {
+  //   const transformedOut = transformPrometheusData(data);
+  //   console.log('transformed IN', transformedOut, links);
+  //   setTransformedLink(links.map(link => {
+  //   //   console.log('test', transformed, link )
+  //     // Find the matching entry in the database where both source and interface match
+  //     const match = transformedOut.links.find(
+  //       entry=>  entry.source === link.source && entry.interface === link.sourcePort)
+  //     // // If a match is found, add the value to the link object
+  //     return match
+  //       ? { ...link, valueIn: match.value }
+  //       : link; 
+  //     }));
+  //   });
 
-function formatBits(bits) {
+// }
+  const fetchAndEnrichData = async () => {
+    try {
+      const [outData, inData] = await Promise.all([
+        fetchPrometheusData("gnmic_srl_if_traffic_rate_out_bps"),
+        fetchPrometheusData("gnmic_srl_if_traffic_rate_in_bps"),
+      ]);
+  
+      // Transform the data
+      const transformedOut = transformPrometheusData(outData);
+      const transformedIn = transformPrometheusData(inData);
+  
+      // Merge the transformed data with links
+      const updatedLinks = links.map(link => {
+        const matchOut = transformedOut.links.find(
+          entry => entry.source === link.source && entry.interface === link.sourcePort
+        );
+        const matchIn = transformedIn.links.find(
+          entry => entry.source === link.source && entry.interface === link.sourcePort
+        );
+  
+       
+        return {
+          ...link,
+          valueOut: matchOut ? matchOut.value : undefined,
+          valueIn: matchIn ? matchIn.value : undefined,
+        };
+      });
+  
+      console.log("Updated Links", updatedLinks);
+    
+      setTransformedLink(updatedLinks);
+  
+    } catch (error) {
+      console.error("Error fetching or transforming data:", error);
+    }
+  };
+function formatBits(bits: number) {
  
   const kb = bits / 1000;       
   const mb = kb / 1000;        
 
   if (mb >= 1) {
       return `${mb.toFixed(1)} Mb/s`;
-  } else {
+  } else if (kb >= 1){
       return `${kb.toFixed(1)} kb/s`; 
+  } else {
+    return `${bits} b/s`; 
+  }
+}
+
+
+function linkColors(valin, valout) {
+  const inbound = Number(valin) || 0; 
+  const outbound = Number(valout) || 0; 
+  switch (true) {
+    case (inbound < 500000 && outbound < 500000):
+      console.log('color 500000', inbound , outbound);
+      return '#bec8d2';
+
+    case (inbound < 2000000 && outbound < 2000000):
+      console.log('color 2000000',inbound , outbound);
+      return '#4bdd33';
+
+    case (inbound < 5000000 && outbound < 5000000):
+      console.log('color 5000000', inbound , outbound);
+      return '#ff8000';
+
+    default:
+      console.log('default color', inbound ,outbound);
+      return '#ff3154';
   }
 }
 
@@ -82,9 +141,9 @@ function formatBits(bits) {
 
    
    useEffect(() => {
-    const interval = setInterval(fetchAndEnrichData, 10000); // Update bandwidth every 3 seconds
+    const interval = setInterval(fetchAndEnrichData, 10000); 
 
-    return () => clearInterval(interval); // Cleanup the interval on unmount
+    return () => clearInterval(interval); 
   }, []);
  
  
@@ -108,13 +167,13 @@ function formatBits(bits) {
   }, []);
 
     const nodeSet = new Set<string>();
-    // Loop over links to add each unique node name to the set
+    
       links.forEach(link => {
         nodeSet.add(link.source);
         nodeSet.add(link.target);
       });
 
-  // Convert the set of unique node names into an array of node objects
+  
   const nodes = Array.from(nodeSet).map((name, index) => {
     let type = "";
     if (name.startsWith("spine")) type = "spine";
@@ -134,21 +193,20 @@ function formatBits(bits) {
   
     svg.attr("width", width).attr("height", height);
   
-    // Define grid dimensions
+   
     const grid = {
       spine: { x: width / 2, y: height * 0.2 },
       leaf: { x: width / 2, y: height * 0.5 },
       client: { x: width / 2, y: height * 0.8 },
     };
   
-    // Assign positions to nodes based on type and order
-    const nodeSpacing = 200; // Space between nodes in the same row
+  
+    const nodeSpacing = 200; 
     const structuredNodes = nodes.map((node, index) => {
       const typeNodes = nodes.filter((n) => n.type === node.type);
       const typeIndex = typeNodes.indexOf(node);
       const totalNodes = typeNodes.length;
   
-      // Calculate x positions for even spacing
       const x =
         grid[node.type].x - ((totalNodes - 1) * nodeSpacing) / 2 +
         typeIndex * nodeSpacing;
@@ -187,15 +245,26 @@ function formatBits(bits) {
     // Draw links
     const link = svg.selectAll(".link")
       .data(structuredLinks)
-      .enter()
-      .append("line")
-      .attr("class", "link")
-      .style("stroke", "#ccc")
-      .style("stroke-width", 2)
-      .attr("x1", (d: any) => d.source.x)
-      .attr("y1", (d: any) => d.source.y)
-      .attr("x2", (d: any) => d.target.x)
-      .attr("y2", (d: any) => d.target.y);
+      .join(
+        enter => 
+          enter.append("line")
+            .attr("class", "link")
+            .style("stroke", d => linkColors(d.valueIn || 0, d.valueOut || 0))
+            .style("stroke-width", 2)
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y),
+        update => 
+          update 
+            .style("stroke", d => linkColors(d.valueIn || 0, d.valueOut || 0))
+            .style("stroke-width", 2)
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y),
+        exit => exit.remove() 
+      );
   
     // Draw nodes as images
     const node = svg.selectAll(".node")
